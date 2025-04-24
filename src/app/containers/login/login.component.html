@@ -11,6 +11,60 @@
       <ion-item>
         <ion-input labelPlacement="floating" label="Password"></ion-input>
       </ion-item>
+
+      <!-- Phone Authentication Section -->
+      <ion-item>
+        <ion-input 
+          labelPlacement="floating" 
+          label="Phone Number (with country code)" 
+          [(ngModel)]="phoneNumber"
+          placeholder="+1234567890">
+        </ion-input>
+      </ion-item>
+      
+      <ion-item *ngIf="showVerificationInput">
+        <ion-input 
+          labelPlacement="floating" 
+          label="Verification Code" 
+          [(ngModel)]="verificationCode">
+        </ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-button *ngIf="!showVerificationInput" (click)="connectWithPhoneNumber()">
+          <ion-icon></ion-icon>
+          Send Verification Code
+        </ion-button>
+        <ion-button *ngIf="showVerificationInput" (click)="verifyPhoneNumber()">
+          <ion-icon></ion-icon>
+          Verify Code
+        </ion-button>
+      </ion-item>
+
+      <ion-item>
+        <ion-button (click)="connectWithGoogle()">
+          <ion-icon></ion-icon>
+          Connect with Google
+        </ion-button>
+      </ion-item> 
+      
+      <ion-item>
+        <ion-button (click)="signOut()">
+          <ion-icon></ion-icon>
+          Logout
+        </ion-button>
+      </ion-item>
     </ion-list>
+    
+    <!-- Invisible reCAPTCHA container -->
+    <div id="recaptcha-container"></div>
+    
+    <!-- Display logged in user data using async pipe -->
+    <ng-container *ngIf="user$ | async as currentUser; else notLoggedIn">
+      <pre>{{ currentUser | json }}</pre>
+    </ng-container>
+    <ng-template #notLoggedIn>
+      <p>Not logged in</p>
+    </ng-template>
   </div>
 </ion-content>
