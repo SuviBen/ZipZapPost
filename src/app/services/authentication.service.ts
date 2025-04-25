@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Auth, authState, EmailAuthProvider, GoogleAuthProvider, signInWithPopup, signOut, User, RecaptchaVerifier, signInWithPhoneNumber } from '@angular/fire/auth';
+import { Auth, authState, GoogleAuthProvider, signInWithPopup, signOut, User, RecaptchaVerifier, signInWithPhoneNumber, browserLocalPersistence, setPersistence } from '@angular/fire/auth';
 import { doc, serverTimestamp } from '@angular/fire/firestore';
 import { getFirestore } from '@angular/fire/firestore';
 import { setDoc } from '@angular/fire/firestore';
@@ -17,6 +17,11 @@ export class AuthenticationService {
     public readonly auth: Auth,
     private ngZone: NgZone
   ) {
+    // Set persistence to LOCAL to maintain session across page reloads
+    setPersistence(this.auth, browserLocalPersistence).catch(error => {
+      console.error("Error setting persistence:", error);
+    });
+    
     // Subscribe to auth state changes within NgZone to avoid hydration issues
     this.getCurrentUser$ = authState(this.auth).pipe(
       tap(user => {
@@ -26,10 +31,9 @@ export class AuthenticationService {
       })
     );
   }
-
+  
   async connectWithPhoneNumber(phoneNumber: string, recaptchaVerifier: RecaptchaVerifier) {
     try {
-      // Run Firebase operations within NgZone
       return this.ngZone.runTask(() => {
         return signInWithPhoneNumber(this.auth, phoneNumber, recaptchaVerifier);
       });
@@ -44,6 +48,16 @@ export class AuthenticationService {
       return this.ngZone.runTask(async () => {
         const result = await confirmationResult.confirm(verificationCode);
         this.currentUser = result.user;
+        if (result.user) {
+          const { uid } = result.user;
+          const userDoc = doc(getFirestore(), 'users', uid);
+          await setDoc(userDoc as any, {
+            uid,
+            lastLogin: serverTimestamp(),
+            profileOK: false
+          }, { merge: true });
+        }
+        
         return result.user;
       });
     } catch (error) {
@@ -52,54 +66,47 @@ export class AuthenticationService {
     }
   }
 
+  // Enhanced Google sign-in that works better with popups and zones
   async connectWithGoogle() {
-    return this.ngZone.runTask(async () => {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(this.auth, provider);
-      this.currentUser = result.user;
-      
-      // Store user data in Firestore
-      if (result.user) {
-        const { uid, email, displayName, photoURL } = result.user;
-        const userDoc = doc(getFirestore(), 'users', uid);
-        await setDoc(userDoc as any, {
-          uid,
-          email,
-          displayName,
-          photoURL,
-          lastLogin: serverTimestamp()
-        }, { merge: true });
-      }
-      return result.user;
+    const provider = new GoogleAuthProvider();
+    
+    // These options help with the popup window behavior
+    provider.setCustomParameters({
+      prompt: 'select_account'
     });
-  } 
-
-  async signInWithEmail(email: string, password: string) {
-    try {
-      return this.ngZone.runTask(async () => {
-        const credential = EmailAuthProvider.credential(email, password);
-        const result = await signInWithPopup(this.auth, credential);
-        this.currentUser = result.user;
-        return result.user;
-      });
-    } catch (error) {
-      console.error('Error signing in with email/password:', error);
-      throw error;
-    }
-  }
-
-  async signUpWithEmail(email: string, password: string) {
-    try {
-      return this.ngZone.runTask(async () => {
-        const credential = EmailAuthProvider.credential(email, password);
-        const result = await signInWithPopup(this.auth, credential);
-        this.currentUser = result.user;
-        return result.user;
-      });
-    } catch (error) {
-      console.error('Error signing up with email/password:', error);
-      throw error;
-    }
+    
+    // Remove from zone.js to avoid interference with popup handling
+    return this.ngZone.runOutsideAngular(async () => {
+      try {
+        // Use popup method without zone.js interference
+        const result = await signInWithPopup(this.auth, provider);
+        
+        // Re-enter zone for UI updates
+        return this.ngZone.run(async () => {
+          this.currentUser = result.user;
+          
+          if (result.user) {
+            const { uid, email, displayName, photoURL } = result.user;
+            const userDoc = doc(getFirestore(), 'users', uid);
+            await setDoc(userDoc as any, {
+              uid,
+              email,
+              displayName,
+              photoURL,
+              lastLogin: serverTimestamp()
+            }, { merge: true });
+          }
+          
+          return result.user;
+        });
+      } catch (error) {
+        // Re-enter zone for error handling
+        return this.ngZone.run(() => {
+          console.error('Error signing in with Google:', error);
+          throw error;
+        });
+      }
+    });
   }
 
   async signOut() {

@@ -25,12 +25,12 @@ export class LoginComponent implements OnInit {
   public verificationCode: string = '';
   public confirmationResult: any = null;
   public showVerificationInput: boolean = false;
+
   
   constructor(
     private readonly authService: AuthenticationService,
     private alertController: AlertController
   ) {
-    // Use this observable with async pipe in the template
     this.user$ = this.authService.getCurrentUser$;
   }
 
@@ -39,25 +39,19 @@ export class LoginComponent implements OnInit {
   }
 
   private initRecaptcha() {
-    // Clear any existing recaptcha elements first
     const recaptchaContainer = document.getElementById('recaptcha-container');
     if (recaptchaContainer) {
       recaptchaContainer.innerHTML = '';
     }
 
     try {
-      // Use AngularFire's RecaptchaVerifier
       this.recaptchaVerifier = new RecaptchaVerifier(this.authService.auth, 'recaptcha-container', {
-        size: 'invisible',
-        callback: () => {
-          // Callback runs when reCAPTCHA is solved
-          console.log('reCAPTCHA verified');
-        }
+        size: 'invisible'
       });
       
-      // Render the reCAPTCHA widget
       this.recaptchaVerifier.render();
     } catch (error) {
+      // TODO: Handle error
       console.error('Error initializing recaptcha:', error);
     }
   }
@@ -73,7 +67,7 @@ export class LoginComponent implements OnInit {
         this.initRecaptcha();
       }
 
-      // Format phone number with + if not already present
+      // TODO: Format phone number with + if not already present
       const formattedPhoneNumber = this.phoneNumber.startsWith('+') ? 
         this.phoneNumber : `+${this.phoneNumber}`;
 
@@ -87,7 +81,6 @@ export class LoginComponent implements OnInit {
     } catch (error) {
       console.error('Failed to send verification code:', error);
       this.presentAlert('Failed to send verification code. Please try again.');
-      // Re-initialize recaptcha for next attempt
       this.initRecaptcha();
     }
   }
@@ -123,28 +116,25 @@ export class LoginComponent implements OnInit {
 
   async connectWithGoogle() {
     try {
-      this.currentUser = await this.authService.connectWithGoogle();
-    } catch (error) {
-      console.error('Failed to sign in with Google:', error);
-      this.presentAlert('Failed to sign in with Google');
-    }
-  }
-
-  async signInWithEmail(email: string, password: string) {
-    try {
-      this.currentUser = await this.authService.signInWithEmail(email, password);
-    } catch (error) {
-      console.error('Failed to sign in with email/password:', error);
-      this.presentAlert('Failed to sign in with email/password');
-    }
-  }
-
-  async signUpWithEmail(email: string, password: string) {
-    try {
-      this.currentUser = await this.authService.signUpWithEmail(email, password);
-    } catch (error) {
-      console.error('Failed to sign up with email/password:', error);
-      this.presentAlert('Failed to sign up with email/password');
+      // Disable the button or show loading indicator here if you have one
+      
+      // Add a timeout to help with popup issues
+      setTimeout(async () => {
+        try {
+          const user = await this.authService.connectWithGoogle();
+          console.log('Google auth successful:', user);
+        } catch (error: any) {
+          console.error('Failed to sign in with Google (inner catch):', error);
+          if (error.code !== 'auth/popup-closed-by-user') {
+            this.presentAlert('Failed to sign in with Google. Please try again.');
+          }
+        }
+      }, 300); // Small delay before opening popup
+    } catch (error: any) {
+      console.error('Failed to sign in with Google (outer catch):', error);
+      if (error.code !== 'auth/popup-closed-by-user') {
+        this.presentAlert('Failed to sign in with Google. Please try again.');
+      }
     }
   }
 
@@ -157,4 +147,6 @@ export class LoginComponent implements OnInit {
       this.presentAlert('Failed to sign out');
     }
   }
+
+
 }

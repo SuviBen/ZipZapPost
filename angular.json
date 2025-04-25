@@ -95,6 +95,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "allowedHosts": ["localhost", "gnat-engaging-wholly.ngrok-free.app", ".ngrok-free.app"]
+          },
           "configurations": {
             "production": {
               "buildTarget": "zip-zap-post:build:production"
