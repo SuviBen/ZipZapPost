@@ -1,7 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Auth, authState, GoogleAuthProvider, signInWithPopup, signOut, User, RecaptchaVerifier, signInWithPhoneNumber, browserLocalPersistence, setPersistence } from '@angular/fire/auth';
-import { doc, serverTimestamp } from '@angular/fire/firestore';
-import { getFirestore } from '@angular/fire/firestore';
+import { Auth, authState, GoogleAuthProvider, signInWithPopup, signOut, User, RecaptchaVerifier, signInWithPhoneNumber } from '@angular/fire/auth';
+import { doc, serverTimestamp, getFirestore } from '@angular/fire/firestore';
 import { setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -17,12 +16,6 @@ export class AuthenticationService {
     public readonly auth: Auth,
     private ngZone: NgZone
   ) {
-    // Set persistence to LOCAL to maintain session across page reloads
-    setPersistence(this.auth, browserLocalPersistence).catch(error => {
-      console.error("Error setting persistence:", error);
-    });
-    
-    // Subscribe to auth state changes within NgZone to avoid hydration issues
     this.getCurrentUser$ = authState(this.auth).pipe(
       tap(user => {
         this.ngZone.run(() => {
@@ -50,10 +43,12 @@ export class AuthenticationService {
         this.currentUser = result.user;
         if (result.user) {
           const { uid } = result.user;
-          const userDoc = doc(getFirestore(), 'users', uid);
+          const db = getFirestore();
+          const userDoc = doc(db, 'users', uid);
           await setDoc(userDoc as any, {
             uid,
             lastLogin: serverTimestamp(),
+            phoneNumber: result.user.phoneNumber,
             profileOK: false
           }, { merge: true });
         }
@@ -66,28 +61,24 @@ export class AuthenticationService {
     }
   }
 
-  // Enhanced Google sign-in that works better with popups and zones
   async connectWithGoogle() {
     const provider = new GoogleAuthProvider();
     
-    // These options help with the popup window behavior
     provider.setCustomParameters({
       prompt: 'select_account'
     });
     
-    // Remove from zone.js to avoid interference with popup handling
     return this.ngZone.runOutsideAngular(async () => {
       try {
-        // Use popup method without zone.js interference
         const result = await signInWithPopup(this.auth, provider);
-        
-        // Re-enter zone for UI updates
+
         return this.ngZone.run(async () => {
           this.currentUser = result.user;
           
           if (result.user) {
             const { uid, email, displayName, photoURL } = result.user;
-            const userDoc = doc(getFirestore(), 'users', uid);
+            const db = getFirestore();
+            const userDoc = doc(db, 'users', uid);
             await setDoc(userDoc as any, {
               uid,
               email,
@@ -100,7 +91,6 @@ export class AuthenticationService {
           return result.user;
         });
       } catch (error) {
-        // Re-enter zone for error handling
         return this.ngZone.run(() => {
           console.error('Error signing in with Google:', error);
           throw error;

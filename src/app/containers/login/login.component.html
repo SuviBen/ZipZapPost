@@ -1,67 +1,70 @@
+<ion-header>
+  <ion-title>Login</ion-title>
+</ion-header>
 <ion-content class="ion-padding">
-  <div class="ion-text-center">
-    <ion-header>
-      <ion-title>Login</ion-title>
-    </ion-header>
     <ion-list class="ion-padding-horizontal">
-      <ion-item>
-        <ion-input 
-          labelPlacement="floating" 
-          label="Phone Number (with country code)" 
-          [(ngModel)]="phoneNumber"
-          placeholder="+1234567890">
-        </ion-input>
-      </ion-item>
-      
-      @if (showVerificationInput) {
-        <ion-item>
-          <ion-input 
-            labelPlacement="floating" 
-            label="Verification Code" 
-            [(ngModel)]="verificationCode">
-          </ion-input>
-        </ion-item>
-      }
-      
-      @if (phoneNumber) {
-          <ion-item>
-          <ion-button (click)="connectWithPhoneNumber()">
-            <ion-icon></ion-icon>
-            Send Verification Code
-          </ion-button>
-        </ion-item>
-        } @if (showVerificationInput) {
-        <ion-item>
-          <ion-button (click)="verifyPhoneNumber()">
-            <ion-icon></ion-icon>
-            Verify Code
-          </ion-button>
-        </ion-item>
-        }
+    @if (user$ | async; as currentUser) {
+      <!-- Logged in state -->
 
-      <ion-item>
-        <ion-button (click)="connectWithGoogle()">
-          <ion-icon></ion-icon>
-          Connect with Google
-        </ion-button>
-      </ion-item> 
-      
-      @if (currentUser?.uid) {
         <ion-item>
           <ion-button (click)="signOut()">
             <ion-icon></ion-icon>
             Logout
           </ion-button>
         </ion-item>
+        <ion-item>
+          {{ currentUser.uid }}
+        </ion-item>
+
+    } @else {
+      <!-- Not logged in state -->
+        <ion-item>
+          <ion-input 
+            labelPlacement="floating" 
+            label="Phone Number (with country code)" 
+            [(ngModel)]="phoneNumber"
+            placeholder="+1234567890">
+          </ion-input>
+        </ion-item>
+        
+        @if (showVerificationInput) {
+          <ion-item>
+            <ion-input 
+              labelPlacement="floating" 
+              label="Verification Code" 
+              [(ngModel)]="verificationCode">
+            </ion-input>
+          </ion-item>
+        }
+        
+        @if (phoneNumber) {
+          <ion-item>
+            <ion-button (click)="connectWithPhoneNumber()">
+              <ion-icon></ion-icon>
+              Send Verification Code
+            </ion-button>
+          </ion-item>
+        }
+        
+        @if (showVerificationInput) {
+          <ion-item>
+            <ion-button (click)="verifyPhoneNumber()">
+              <ion-icon></ion-icon>
+              Verify Code
+            </ion-button>
+          </ion-item>
+        }
+  
+        <ion-item>
+          <ion-button (click)="connectWithGoogle()">
+            <ion-icon></ion-icon>
+            Connect with Google
+          </ion-button>
+        </ion-item>
+        
+        <p>Not logged in</p>
       }
     </ion-list>
     
     <div id="recaptcha-container"></div>
-    
-    @if (user$ | async; as currentUser) {
-      <pre>{{ currentUser.uid }}</pre>
-    } @else {
-      <p>Not logged in</p>
-    }
-  </div>
 </ion-content>

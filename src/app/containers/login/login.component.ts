@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { User } from '@angular/fire/auth';
 import { IonInput, IonItem, IonList, IonContent, IonTitle, IonHeader, IonButton, IonIcon, AlertController } from '@ionic/angular/standalone';
@@ -18,7 +18,6 @@ const UIElements = [
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
-  public currentUser: User | null = null;
   public readonly user$: Observable<User | null>;
   private recaptchaVerifier: RecaptchaVerifier | null = null;
   public phoneNumber: string = '';
@@ -26,32 +25,42 @@ export class LoginComponent implements OnInit {
   public confirmationResult: any = null;
   public showVerificationInput: boolean = false;
 
-  
   constructor(
     private readonly authService: AuthenticationService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private ngZone: NgZone
   ) {
     this.user$ = this.authService.getCurrentUser$;
   }
 
   ngOnInit() {
-    this.initRecaptcha();
+    setTimeout(() => this.initRecaptcha(), 1000); // wait until DOM is loaded
   }
 
   private initRecaptcha() {
     const recaptchaContainer = document.getElementById('recaptcha-container');
-    if (recaptchaContainer) {
-      recaptchaContainer.innerHTML = '';
+    if (!recaptchaContainer) {
+      console.error('Recaptcha container not found');
+      return;
     }
+    
+    recaptchaContainer.innerHTML = '';
 
     try {
-      this.recaptchaVerifier = new RecaptchaVerifier(this.authService.auth, 'recaptcha-container', {
-        size: 'invisible'
+      this.ngZone.runOutsideAngular(() => {
+        this.recaptchaVerifier = new RecaptchaVerifier(this.authService.auth, 'recaptcha-container', {
+          size: 'invisible',
+          callback: () => {
+            this.ngZone.run(() => {
+              console.log('reCAPTCHA verified');
+            });
+          }
+        });
+        
+        this.recaptchaVerifier.render()
+          .catch(error => console.error('Error rendering reCAPTCHA:', error));
       });
-      
-      this.recaptchaVerifier.render();
     } catch (error) {
-      // TODO: Handle error
       console.error('Error initializing recaptcha:', error);
     }
   }
@@ -65,15 +74,20 @@ export class LoginComponent implements OnInit {
     try {
       if (!this.recaptchaVerifier) {
         this.initRecaptcha();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        if (!this.recaptchaVerifier) {
+          throw new Error('Failed to initialize reCAPTCHA');
+        }
       }
 
-      // TODO: Format phone number with + if not already present
+      // add formatting logic
       const formattedPhoneNumber = this.phoneNumber.startsWith('+') ? 
         this.phoneNumber : `+${this.phoneNumber}`;
 
       this.confirmationResult = await this.authService.connectWithPhoneNumber(
         formattedPhoneNumber, 
-        this.recaptchaVerifier!
+        this.recaptchaVerifier
       );
       
       this.showVerificationInput = true;
@@ -92,7 +106,7 @@ export class LoginComponent implements OnInit {
     }
 
     try {
-      this.currentUser = await this.authService.verifyPhoneNumber(
+      await this.authService.verifyPhoneNumber(
         this.confirmationResult,
         this.verificationCode
       );
@@ -116,9 +130,7 @@ export class LoginComponent implements OnInit {
 
   async connectWithGoogle() {
     try {
-      // Disable the button or show loading indicator here if you have one
-      
-      // Add a timeout to help with popup issues
+      // add loading animation
       setTimeout(async () => {
         try {
           const user = await this.authService.connectWithGoogle();
@@ -129,7 +141,7 @@ export class LoginComponent implements OnInit {
             this.presentAlert('Failed to sign in with Google. Please try again.');
           }
         }
-      }, 300); // Small delay before opening popup
+      }, 300);
     } catch (error: any) {
       console.error('Failed to sign in with Google (outer catch):', error);
       if (error.code !== 'auth/popup-closed-by-user') {
@@ -141,12 +153,9 @@ export class LoginComponent implements OnInit {
   async signOut() {
     try {
       await this.authService.signOut();
-      this.currentUser = null;
     } catch (error) {
       console.error('Failed to sign out:', error);
       this.presentAlert('Failed to sign out');
     }
   }
-
-
 }

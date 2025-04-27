@@ -2,8 +2,13 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './containers/home/home.component';
 import { LoginComponent } from './containers/login/login.component';
 import { MainViewComponent } from './containers/profile/main-view/main-view.component';
+import { PersonalDataComponent } from './containers/login/personal-data/personal-data.component';
 
 export const routes: Routes = [
+    {
+        path: 'personal-data',
+        component: PersonalDataComponent
+    },
     {
         path: 'profile',
         component: MainViewComponent

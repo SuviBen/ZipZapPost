@@ -1,3 +1,18 @@
-<p>
-  personal-data works!
-</p>
+<ion-content>
+    <ion-list>
+        <ion-item>
+            <ion-input label="Name" type="text" [(ngModel)]="name"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-input label="Last Name" type="text" [(ngModel)]="lastName"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-input label="Email" type="email" [(ngModel)]="email"></ion-input>
+        </ion-item>
+        <ion-item>
+            <!-- <ion-input label="Phone" readonly="true" type="tel" value="{{ user$ | async | json }}"></ion-input> -->
+             <p>{{ user$ }} </p>
+        </ion-item>
+        <ion-button expand="full" (click)="next()">Next</ion-button>
+    </ion-list>
+</ion-content>
