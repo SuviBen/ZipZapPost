@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
     recaptchaContainer.innerHTML = '';
 
     try {
-      this.recaptchaVerifier = new RecaptchaVerifier(this.authService.auth, 'recaptcha-container', {
+      this.recaptchaVerifier = new RecaptchaVerifier(this.authService._auth, 'recaptcha-container', {
         size: 'invisible',
         callback: () => {
           console.log('reCAPTCHA verified');
@@ -106,7 +106,6 @@ export class LoginComponent implements OnInit {
         this.verificationCode
       );
       this.showVerificationInput = false;
-      this.presentAlert('Successfully logged in!');
     } catch (error) {
       console.error('Failed to verify code:', error);
       this.presentAlert('Failed to verify code. Please try again.');
@@ -121,28 +120,6 @@ export class LoginComponent implements OnInit {
     });
 
     await alert.present();
-  }
-
-  async connectWithGoogle() {
-    try {
-      // add loading animation
-      setTimeout(async () => {
-        try {
-          const user = await this.authService.connectWithGoogle();
-          console.log('Google auth successful:', user);
-        } catch (error: any) {
-          console.error('Failed to sign in with Google (inner catch):', error);
-          if (error.code !== 'auth/popup-closed-by-user') {
-            this.presentAlert('Failed to sign in with Google. Please try again.');
-          }
-        }
-      }, 300);
-    } catch (error: any) {
-      console.error('Failed to sign in with Google (outer catch):', error);
-      if (error.code !== 'auth/popup-closed-by-user') {
-        this.presentAlert('Failed to sign in with Google. Please try again.');
-      }
-    }
   }
 
   async signOut() {

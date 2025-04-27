@@ -1,16 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { IonIcon, IonButton, IonHeader, IonItem, IonContent, IonInput, IonList, IonTitle, IonLabel } from '@ionic/angular/standalone';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Auth, User, authState } from '@angular/fire/auth';
-import { doc, setDoc, Firestore, getFirestore, updateDoc } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Auth, signOut } from '@angular/fire/auth';
+import { Router } from '@angular/router';
+import { Observable, tap } from 'rxjs';
+import { UserProfile, UserProfileService } from '../../../services/user-profile.service';
 
 const UIElements = [
   IonContent, IonInput, IonItem, IonList, IonTitle, IonHeader, IonButton, IonIcon, IonLabel,
 ];
-
 
 @Component({
   selector: 'app-personal-data',
@@ -21,34 +20,65 @@ const UIElements = [
     CommonModule, 
     FormsModule,
     ReactiveFormsModule,
-  ]
+  ],
+  standalone: true
 })
 export class PersonalDataComponent implements OnInit {
-
-  public name: string = '';
-  public lastName: string = '';
-  public email: string = '';
-  public phone: string = '';
-  public user$: Observable<User | null>;
+  profileForm: FormGroup;
+  userProfile$: Observable<UserProfile | null>;
+  isLoading = true;
 
   constructor(
     private readonly _auth: Auth,
+    private userProfileService: UserProfileService,
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {
-    this.user$ = authState(this._auth);
+    this.profileForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: [{ value: '', disabled: true }]
+    });
+    
+    // Get user profile and patch form values when data is available
+    this.userProfile$ = this.userProfileService.getUserProfile().pipe(
+      tap(profile => {
+        if (profile) {
+          this.isLoading = false;
+          this.patchFormValues(profile);
+        }
+      })
+    );
   }
 
   ngOnInit() {
+    // The async pipe in the template will handle the subscription
+  }
+  
+  // Update form values with data from profile
+  private patchFormValues(profile: UserProfile): void {
+    this.profileForm.patchValue({
+      firstName: profile.firstName || '',
+      lastName: profile.lastName || '',
+      email: profile.email || '',
+      phoneNumber: profile.phoneNumber || ''
+    });
   }
 
-  async next() {
-    const db = getFirestore();
-    const uid = this._auth.currentUser!.uid;
-    const userDoc = doc(db, 'users', uid);
-    
-    await updateDoc(userDoc, {
-      name: this.name,
-      lastName: this.lastName,
-      email: this.email,
-    });
+  async saveProfile() {
+    if (this.profileForm.valid) {
+      try {
+        await this.userProfileService.updateUserProfile(this.profileForm.value);
+        this.router.navigate(['/home']);
+      } catch (error) {
+        console.error('Error updating profile:', error);
+      }
+    }
+  }
+
+  async signOut() {
+    await signOut(this._auth);
+    this.router.navigate(['/login']);
   }
 }

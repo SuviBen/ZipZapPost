@@ -1,19 +1,24 @@
 <ion-content>
-    <ng-container *ngIf="user$ | async as user">
-        <ion-list>
-            <ion-item>
-                <ion-input label="Name" type="text" [(ngModel)]="name"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-input label="Last Name" type="text" [(ngModel)]="lastName"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-input label="Email" type="email" [(ngModel)]="email"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-input label="Phone" readonly="true" type="tel" [value]="user.phoneNumber || ''"></ion-input>
-            </ion-item>
-            <ion-button expand="full" (click)="next()">Next</ion-button>
-        </ion-list>
+    <ng-container *ngIf="userProfile$ | async as profile">
+        <form [formGroup]="profileForm">
+            <ion-list>
+                <ion-item>
+                    <ion-input label="Name" type="text" formControlName="firstName"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-input label="Last Name" type="text" formControlName="lastName"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-input label="Email" type="email" formControlName="email"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-input label="Phone" readonly="true" type="tel" formControlName="phoneNumber"></ion-input>
+                </ion-item>
+                <ion-button expand="full" (click)="saveProfile()" [disabled]="!profileForm.valid">Save</ion-button>
+                <ion-button expand="full" (click)="signOut()">Sign Out</ion-button>
+            </ion-list>
+        </form>
     </ng-container>
+    
+    <div *ngIf="isLoading">Loading...</div>
 </ion-content>
