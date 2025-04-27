@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { User } from '@angular/fire/auth';
 import { IonInput, IonItem, IonList, IonContent, IonTitle, IonHeader, IonButton, IonIcon, AlertController } from '@ionic/angular/standalone';
@@ -27,8 +27,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthenticationService,
-    private alertController: AlertController,
-    private ngZone: NgZone
+    private alertController: AlertController
   ) {
     this.user$ = this.authService.getCurrentUser$;
   }
@@ -47,19 +46,15 @@ export class LoginComponent implements OnInit {
     recaptchaContainer.innerHTML = '';
 
     try {
-      this.ngZone.runOutsideAngular(() => {
-        this.recaptchaVerifier = new RecaptchaVerifier(this.authService.auth, 'recaptcha-container', {
-          size: 'invisible',
-          callback: () => {
-            this.ngZone.run(() => {
-              console.log('reCAPTCHA verified');
-            });
-          }
-        });
-        
-        this.recaptchaVerifier.render()
-          .catch(error => console.error('Error rendering reCAPTCHA:', error));
+      this.recaptchaVerifier = new RecaptchaVerifier(this.authService.auth, 'recaptcha-container', {
+        size: 'invisible',
+        callback: () => {
+          console.log('reCAPTCHA verified');
+        }
       });
+      
+      this.recaptchaVerifier.render()
+        .catch(error => console.error('Error rendering reCAPTCHA:', error));
     } catch (error) {
       console.error('Error initializing recaptcha:', error);
     }
