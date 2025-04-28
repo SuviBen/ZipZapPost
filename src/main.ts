@@ -4,6 +4,5 @@ import { AppComponent } from './app/app.component';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
 defineCustomElements(window);
-
 bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err));

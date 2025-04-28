@@ -1,0 +1,8 @@
+<ion-content class="ion-padding">
+  <h1>Take a Picture</h1>
+  <ion-button (click)="takePicture()">Take Picture</ion-button>
+  
+  @if (imgSrc) {
+    <ion-img [src]="imgSrc" style="width: 100%; height: auto;"></ion-img>
+  }
+</ion-content>

@@ -1,0 +1,14 @@
+<ion-content class="ion-padding">
+  <h1>Address Setup</h1>
+  <ion-button (click)="getLocation()">Get Location</ion-button>
+  
+  @if (position) {
+    <div>
+      <ion-label>Latitude: {{ position.latitude }}</ion-label>
+      <ion-label>Longitude: {{ position.longitude }}</ion-label>
+      <ion-label>Accuracy: {{ position.accuracy }}</ion-label>
+    </div>
+  }
+
+  <ion-button (click)="navigateToPageTwo()">Continue</ion-button>
+</ion-content>
