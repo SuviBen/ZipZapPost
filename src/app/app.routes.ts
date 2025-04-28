@@ -3,8 +3,12 @@ import { HomeComponent } from './containers/home/home.component';
 import { LoginComponent } from './containers/login/login.component';
 import { MainViewComponent } from './containers/profile/main-view/main-view.component';
 import { PersonalDataComponent } from './containers/login/personal-data/personal-data.component';
-
+import { UserDashboardComponent } from './containers/dashboard/user-dashboard/user-dashboard.component';
 export const routes: Routes = [
+    {
+        path: 'dashboard',
+        component: UserDashboardComponent
+    },
     {
         path: 'personal-data',
         component: PersonalDataComponent
