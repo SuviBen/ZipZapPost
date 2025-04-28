@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { User } from '@angular/fire/auth';
 import { IonInput, IonItem, IonList, IonContent, IonTitle, IonHeader, IonButton, IonIcon, AlertController } from '@ionic/angular/standalone';
 import { Observable } from 'rxjs';
-import { AuthenticationService } from '../../services/authentication.service';
+import { AuthenticationService } from '../../services/login/authentication.service';
 import { RecaptchaVerifier } from '@angular/fire/auth';
 
 const UIElements = [

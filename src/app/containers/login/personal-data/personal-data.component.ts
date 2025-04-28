@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { IonIcon, IonButton, IonHeader, IonItem, IonContent, IonInput, IonList, IonTitle, IonLabel } from '@ionic/angular/standalone';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Auth, signOut } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
-import { UserProfile, UserProfileService } from '../../../services/user-profile.service';
+import { UserProfile, UserProfileService } from '../../../services/login/user-profile.service';
 
 const UIElements = [
   IonContent, IonInput, IonItem, IonList, IonTitle, IonHeader, IonButton, IonIcon, IonLabel,
@@ -23,7 +23,7 @@ const UIElements = [
   ],
   standalone: true
 })
-export class PersonalDataComponent implements OnInit {
+export class PersonalDataComponent {
   profileForm: FormGroup;
   userProfile$: Observable<UserProfile | null>;
   isLoading = true;
@@ -41,7 +41,6 @@ export class PersonalDataComponent implements OnInit {
       phoneNumber: [{ value: '', disabled: true }]
     });
     
-    // Get user profile and patch form values when data is available
     this.userProfile$ = this.userProfileService.getUserProfile().pipe(
       tap(profile => {
         if (profile) {
@@ -51,12 +50,7 @@ export class PersonalDataComponent implements OnInit {
       })
     );
   }
-
-  ngOnInit() {
-    // The async pipe in the template will handle the subscription
-  }
   
-  // Update form values with data from profile
   private patchFormValues(profile: UserProfile): void {
     this.profileForm.patchValue({
       firstName: profile.firstName || '',

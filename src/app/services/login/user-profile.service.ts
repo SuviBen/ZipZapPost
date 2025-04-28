@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, docData, updateDoc, getDoc } from '@angular/fire/firestore';
-import { AuthenticationService } from './authentication.service';
 import { Observable, of, switchMap } from 'rxjs';
+import { AuthenticationService } from './authentication.service';
 
 export interface UserProfile {
   uid: string;
@@ -23,9 +23,6 @@ export class UserProfileService {
     private authService: AuthenticationService
   ) {}
 
-  /**
-   * Get the current user's profile data as an observable
-   */
   getUserProfile(): Observable<UserProfile | null> {
     return this.authService.getCurrentUser$.pipe(
       switchMap(user => {
@@ -39,9 +36,6 @@ export class UserProfileService {
     );
   }
 
-  /**
-   * Update specific fields in the user profile
-   */
   async updateUserProfile(data: Partial<UserProfile>): Promise<void> {
     const user = this.authService.currentUser;
     if (!user) {
@@ -50,7 +44,6 @@ export class UserProfileService {
 
     const userDocRef = doc(this.firestore, 'users', user.uid);
     
-    // If we're updating profile data, mark profileOK as true
     if ('firstName' in data || 'lastName' in data || 'email' in data) {
       data.profileOK = true;
     }
