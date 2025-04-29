@@ -12,7 +12,39 @@
             </ion-label>
         </ion-item>
     </ion-list>
-    <ion-button id="open-modal" expand="block" (click)="onWillPresent()">Set up your address</ion-button>
+    
+    <!-- Address Data Card -->
+    <ion-card *ngIf="addressData$ | async as addressData">
+        <ion-card-header>
+            <ion-card-title>Your Address</ion-card-title>
+            <ion-card-subtitle>Location and Image</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+            <!-- Map Container -->
+            <div id="map" style="height: 300px; width: 100%; margin-bottom: 20px;"></div>
+            
+            <!-- Address Details -->
+            <div class="address-details">
+                <p><strong>Latitude:</strong> {{ addressData.latitude }}</p>
+                <p><strong>Longitude:</strong> {{ addressData.longitude }}</p>
+                <p><strong>Last Updated:</strong> {{ addressData.timestamp | date:'medium' }}</p>
+            </div>
+            
+            <!-- Address Image -->
+            <div class="address-image" *ngIf="addressData.imageUrl">
+                <h3>Address Image</h3>
+                <ion-img [src]="addressData.imageUrl" style="width: 100%; height: auto;"></ion-img>
+            </div>
+        </ion-card-content>
+    </ion-card>
+    
+    <!-- No Address Data Message -->
+    <div *ngIf="!(addressData$ | async)" class="ion-padding">
+        <p>You haven't set up your address yet.</p>
+    </div>
+    
+    <ion-button id="open-modal" expand="block" (click)="openModal()">Set up your address</ion-button>
+    
     <ion-modal #modal trigger="open-modal">
       <ng-template>
         <ion-header>

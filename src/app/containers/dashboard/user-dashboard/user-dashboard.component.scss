@@ -1,0 +1,46 @@
+#map {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.address-details {
+  margin: 16px 0;
+  
+  p {
+    margin: 8px 0;
+  }
+}
+
+.address-image {
+  margin-top: 20px;
+  
+  h3 {
+    margin-bottom: 10px;
+  }
+  
+  ion-img {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+ion-card {
+  margin: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+ion-card-header {
+  background-color: var(--ion-color-light);
+  border-bottom: 1px solid var(--ion-color-light-shade);
+}
+
+ion-card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+ion-card-subtitle {
+  font-size: 1rem;
+  color: var(--ion-color-medium);
+}
