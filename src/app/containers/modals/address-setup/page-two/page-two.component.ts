@@ -1,8 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { IonButton, IonContent, IonImg, IonToast, IonNav } from '@ionic/angular/standalone';
+import { IonButton, IonContent, IonImg, IonToast, IonNav, IonModal } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Camera, CameraResultType } from '@capacitor/camera';
-import { AddressService } from '../../../../services/address/address.service';
+import { AddressData, AddressService } from '../../../../services/address/address.service';
+import { Auth } from '@angular/fire/auth';
+import { doc, docData, Firestore } from '@angular/fire/firestore';
+import { firstValueFrom, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-page-two',
@@ -16,9 +19,22 @@ export class PageTwoComponent implements OnInit {
   isUploading = false;
   showToast = false;
   toastMessage = '';
+  addressData$: Observable<AddressData | null> = of(null);
+
   
   private nav = inject(IonNav);
   private addressService = inject(AddressService);
+
+  constructor(
+    private readonly _auth: Auth,
+    private firestore: Firestore,
+  ) {
+    const user = this._auth.currentUser;
+    if (user) {
+      const addressDocRef = doc(this.firestore, 'address-data', user.uid);
+      this.addressData$ = docData(addressDocRef) as Observable<AddressData | null>;
+    }
+  }
 
   ngOnInit() {}
 
@@ -43,13 +59,24 @@ export class PageTwoComponent implements OnInit {
       this.showToast = true;
       return;
     }
-
     try {
+      // Check if there's already an image uploaded and delete it if exists
+      const existingImageUrl = await firstValueFrom(
+        this.addressData$.pipe(
+          map(data => data?.imageUrl)
+        )
+      );
+      
+      if (existingImageUrl) {
+        // Delete the existing image from storage before uploading a new one
+        await this.addressService.deleteImage(existingImageUrl);
+      }
       this.isUploading = true;
       await this.addressService.uploadImage(this.imgSrc);
       this.toastMessage = 'Image uploaded successfully!';
       this.showToast = true;
-      this.nav.pop();
+      const modalEl = document.querySelector('ion-modal');
+        (modalEl as any).dismiss();
     } catch (error) {
       console.error('Error uploading image:', error);
       this.toastMessage = 'Failed to upload image. Please try again.';

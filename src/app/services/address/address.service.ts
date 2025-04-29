@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, setDoc, getDoc, updateDoc } from '@angular/fire/firestore';
-import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
+import { Storage, ref, uploadBytes, getDownloadURL, deleteObject, getStorage } from '@angular/fire/storage';
 import { AuthenticationService } from '../login/authentication.service';
 
 export interface AddressData {
@@ -9,6 +9,7 @@ export interface AddressData {
   longitude: number;
   timestamp: Date;
   imageUrl?: string;
+  storagePath?: string;
 }
 
 @Injectable({
@@ -57,8 +58,11 @@ export class AddressService {
     const response = await fetch(imageUri);
     const blob = await response.blob();
     
+    // Create the storage path
+    const storagePath = `address-images/${uid}/${Date.now()}.jpg`;
+    
     // Create a reference to the storage location
-    const storageRef = ref(this.storage, `address-images/${uid}/${Date.now()}.jpg`);
+    const storageRef = ref(this.storage, storagePath);
     
     // Upload the image
     const snapshot = await uploadBytes(storageRef, blob);
@@ -66,12 +70,41 @@ export class AddressService {
     // Get the download URL
     const downloadUrl = await getDownloadURL(snapshot.ref);
     
-    // Update the address-data document with the image URL
+    // Update the address-data document with the image URL and storage path
     const addressDocRef = doc(this.firestore, 'address-data', uid);
     await updateDoc(addressDocRef, {
-      imageUrl: downloadUrl
+      imageUrl: downloadUrl,
+      storagePath: storagePath
     });
     
     return downloadUrl;
+  }
+
+  async deleteImage(imageUrl: string): Promise<void> {
+    try {
+      const user = this.authService.currentUser;
+      if (!user) {
+        throw new Error('No authenticated user found');
+      }
+      
+      const addressDocRef = doc(this.firestore, 'address-data', user.uid);
+      const addressDoc = await getDoc(addressDocRef);
+      
+      if (addressDoc.exists()) {
+        const addressData = addressDoc.data() as AddressData;
+        
+        if (addressData.storagePath) {
+          // Use the stored path directly
+          const storageRef = ref(this.storage, addressData.storagePath);
+          await deleteObject(storageRef);
+        } else {
+          // If we don't have the path, we can't delete the file
+          console.warn('No storage path found for image, unable to delete from storage');
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      throw error;
+    }
   }
 } 
