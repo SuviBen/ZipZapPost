@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { IonButton, IonContent, IonNav, IonLabel } from '@ionic/angular/standalone';
+import { Component, inject } from '@angular/core';
+import { IonButton, IonContent, IonNav, IonLabel, IonToast } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Geolocation } from '@capacitor/geolocation';
+import { AddressService } from '../../../../services/address/address.service';
 
 import { PageTwoComponent } from '../page-two/page-two.component';
 
@@ -9,7 +10,8 @@ import { PageTwoComponent } from '../page-two/page-two.component';
   selector: 'app-page-one',
   templateUrl: './page-one.component.html',
   styleUrls: ['./page-one.component.scss'],
-  imports: [IonButton, IonContent, IonLabel, CommonModule],
+  imports: [IonButton, IonContent, IonLabel, CommonModule, IonToast],
+  standalone: true
 })
 export class PageOneComponent {
   position?: {
@@ -21,15 +23,38 @@ export class PageOneComponent {
     speed: number | null;
     heading: number | null;
   }
-
-  constructor(private nav: IonNav) {}
+  
+  isSaving = false;
+  showToast = false;
+  toastMessage = '';
+  
+  private nav = inject(IonNav);
+  private addressService = inject(AddressService);
 
   navigateToPageTwo() {
     this.nav.push(PageTwoComponent);
   }
 
   async getLocation() {
-    const coordinates = await Geolocation.getCurrentPosition();
-    this.position = coordinates.coords;
+    try {
+      this.isSaving = true;
+      const coordinates = await Geolocation.getCurrentPosition();
+      this.position = coordinates.coords;
+      
+      // Save to Firebase
+      await this.addressService.saveAddressData(
+        this.position.latitude,
+        this.position.longitude
+      );
+      
+      this.toastMessage = 'Location saved successfully!';
+      this.showToast = true;
+    } catch (error: any) {
+      console.error('Error getting location:', error);
+      this.toastMessage = 'Failed to get location. Please try again.';
+      this.showToast = true;
+    } finally {
+      this.isSaving = false;
+    }
   }
 }

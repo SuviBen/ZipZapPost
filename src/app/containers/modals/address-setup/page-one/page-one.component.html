@@ -1,6 +1,8 @@
 <ion-content class="ion-padding">
   <h1>Address Setup</h1>
-  <ion-button (click)="getLocation()">Get Location</ion-button>
+  <ion-button (click)="getLocation()" [disabled]="isSaving">
+    {{ isSaving ? 'Saving...' : 'Get Location' }}
+  </ion-button>
   
   @if (position) {
     <div>
@@ -11,4 +13,11 @@
   }
 
   <ion-button (click)="navigateToPageTwo()">Continue</ion-button>
+  
+  <ion-toast
+    [isOpen]="showToast"
+    message="{{ toastMessage }}"
+    [duration]="3000"
+    (didDismiss)="showToast = false"
+  ></ion-toast>
 </ion-content>

@@ -4,5 +4,15 @@
   
   @if (imgSrc) {
     <ion-img [src]="imgSrc" style="width: 100%; height: auto;"></ion-img>
+    <ion-button (click)="uploadImage()" [disabled]="isUploading">
+      {{ isUploading ? 'Uploading...' : 'Upload Image' }}
+    </ion-button>
   }
+  
+  <ion-toast
+    [isOpen]="showToast"
+    message="{{ toastMessage }}"
+    [duration]="3000"
+    (didDismiss)="showToast = false"
+  ></ion-toast>
 </ion-content>

@@ -7,7 +7,9 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { getStorage, provideStorage } from '@angular/fire/storage';
 import { environment } from '../environments/environment';
+import { AddressService } from './services/address/address.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,6 +19,8 @@ export const appConfig: ApplicationConfig = {
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
     provideFirestore(() => getFirestore()),
-    provideIonicAngular({})
+    provideStorage(() => getStorage()),
+    provideIonicAngular({}),
+    AddressService
   ]
 };
