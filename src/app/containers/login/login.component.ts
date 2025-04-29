@@ -6,6 +6,7 @@ import { IonInput, IonItem, IonList, IonContent, IonTitle, IonHeader, IonButton,
 import { Observable } from 'rxjs';
 import { RecaptchaVerifier } from '@angular/fire/auth';
 import { AuthenticationService } from '../../services/login/authentication.service';
+import { Router } from '@angular/router';
 
 const UIElements = [
   IonContent, IonInput, IonItem, IonList, IonTitle, IonHeader, IonButton, IonIcon
@@ -27,12 +28,16 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthenticationService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private router: Router
   ) {
     this.user$ = this.authService.getCurrentUser$;
   }
 
   ngOnInit() {
+    if (this.user$) {
+      this.router.navigate(['/dashboard']);
+    }
     setTimeout(() => this.initRecaptcha(), 1000); // wait until DOM is loaded
   }
 
@@ -87,6 +92,7 @@ export class LoginComponent implements OnInit {
       
       this.showVerificationInput = true;
       this.presentAlert('Verification code sent to your phone number');
+      this.phoneNumber = '';
     } catch (error) {
       console.error('Failed to send verification code:', error);
       this.presentAlert('Failed to send verification code. Please try again.');

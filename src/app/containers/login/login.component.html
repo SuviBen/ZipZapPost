@@ -3,31 +3,18 @@
 </ion-header>
 <ion-content class="ion-padding">
     <ion-list class="ion-padding-horizontal">
-    @if (user$ | async; as currentUser) {
-      <!-- Logged in state -->
-
-        <ion-item>
-          <ion-button (click)="signOut()">
-            <ion-icon></ion-icon>
-            Logout
-          </ion-button>
-        </ion-item>
-        <ion-item>
-          {{ currentUser.uid }}
-        </ion-item>
-
-    } @else {
-      <!-- Not logged in state -->
-        <ion-item>
-          <ion-input 
-            labelPlacement="floating" 
-            label="Phone Number (with country code)" 
-            [(ngModel)]="phoneNumber"
-            placeholder="+1234567890"
-            type="tel"
-            >
-          </ion-input>
-        </ion-item>
+        @if (!showVerificationInput) {
+          <ion-item>
+            <ion-input 
+              labelPlacement="floating" 
+              label="Phone Number (with country code)" 
+              [(ngModel)]="phoneNumber"
+              placeholder="+1234567890"
+              type="tel"
+              >
+            </ion-input>
+          </ion-item>
+        }
         
         @if (showVerificationInput) {
           <ion-item>
@@ -41,7 +28,7 @@
           </ion-item>
         }
         
-        @if (phoneNumber) {
+        @if (phoneNumber && !showVerificationInput) {
           <ion-item>
             <ion-button (click)="connectWithPhoneNumber()">
               <ion-icon></ion-icon>
@@ -58,8 +45,6 @@
             </ion-button>
           </ion-item>
         }        
-        <p>Not logged in</p>
-      }
     </ion-list>
     
     <div id="recaptcha-container"></div>

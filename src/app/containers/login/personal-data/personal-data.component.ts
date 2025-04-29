@@ -64,13 +64,13 @@ export class PersonalDataComponent {
     if (this.profileForm.valid) {
       try {
         await this.userProfileService.updateUserProfile(this.profileForm.value);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/dashboard']);
       } catch (error) {
         console.error('Error updating profile:', error);
       }
     }
   }
-
+// Implement sign out logic if the did not complete the profile setup
   async signOut() {
     await signOut(this._auth);
     this.router.navigate(['/login']);
