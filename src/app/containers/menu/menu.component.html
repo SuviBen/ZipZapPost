@@ -1,0 +1,28 @@
+<ion-menu contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-list>
+      <ion-menu-toggle auto-hide="false">
+        <ion-item [routerLink]="['/home']" routerDirection="root">
+          <ion-label>Home</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      
+      <ion-menu-toggle auto-hide="false">
+        <ion-item [routerLink]="['/dashboard']" routerDirection="root">
+          <ion-label>Dashboard</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      
+      <ion-menu-toggle auto-hide="false">
+        <ion-item [routerLink]="['/profile']" routerDirection="root">
+          <ion-label>Profile</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+    </ion-list>
+  </ion-content>
+</ion-menu>

@@ -96,5 +96,6 @@ export class AuthenticationService {
   async signOut() {
     await signOut(this._auth);
     this.currentUser = null;
+    this.router.navigate(['/home']);
   }
 }

@@ -1,3 +1,32 @@
-<p>
-  dashboard works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Zip Zap Post</ion-title>
+    <ion-button class="logout-button" (click)="signOut()" slot="end">Logout</ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+<ion-list>
+  <ion-item>
+      <ion-label>
+          <h2>Welcome {{ firstName | async }} {{ lastName | async }}</h2>
+      </ion-label>
+  </ion-item>
+  <ion-button size="large" expand="full" color="primary">
+    SEND POST
+  </ion-button>
+  @if(postOnTheWay) {
+    <ion-item>
+      <ion-label>
+        You have a post on the way
+      </ion-label>
+    </ion-item>
+      <ion-button size="medium" expand="full" color="primary">
+        Check incoming post
+      </ion-button>
+  }
+</ion-list>
+</ion-content>

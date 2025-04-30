@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonContent, IonHeader, IonList, IonItem, IonLabel, IonToolbar, IonTitle, IonButton, IonIcon, IonModal, IonRouterOutlet, IonImg, IonNav, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle, IonSpinner } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonList, IonItem, IonLabel, IonToolbar, IonTitle, IonButton, IonIcon, IonModal, IonRouterOutlet, IonImg, IonNav, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle, IonSpinner, IonMenuButton } from '@ionic/angular/standalone';
 import { UserProfileService, UserProfile } from '../../services/login/user-profile.service';
 import { firstValueFrom, map, Observable, of } from 'rxjs';
 import { Auth } from '@angular/fire/auth';
@@ -13,7 +13,7 @@ import { PageOneComponent } from '../modals/address-setup/page-one/page-one.comp
 const UIElements = [
   IonContent, IonHeader, IonList, IonItem, IonLabel, IonToolbar, IonTitle, IonButton, 
   IonButtons, IonIcon, IonModal, IonRouterOutlet, IonImg, IonNav, IonCard, IonCardContent, 
-  IonCardHeader, IonCardTitle, IonCardSubtitle, IonSpinner
+  IonCardHeader, IonCardTitle, IonCardSubtitle, IonSpinner, IonMenuButton
 ];
 
 @Component({

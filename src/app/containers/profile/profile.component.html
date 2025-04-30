@@ -1,36 +1,28 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>My profile</ion-title>
     <ion-button class="logout-button" (click)="signOut()" slot="end">Logout</ion-button>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
-    <ion-list>
-        <ion-item>
-            <ion-label>
-                <h2>Welcome {{ firstName | async }} {{ lastName | async }}</h2>
-            </ion-label>
-        </ion-item>
-    </ion-list>
-    
-    <!-- Address Data Card -->
     <ion-card *ngIf="addressData$ | async as addressData">
         <ion-card-header>
             <ion-card-title>Your Address</ion-card-title>
             <ion-card-subtitle>Location and Image</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
-            <!-- Map Container -->
             <div id="map" style="height: 300px; width: 100%; margin-bottom: 20px;"></div>
             
-            <!-- Address Details -->
             <div class="address-details">
                 <p><strong>Latitude:</strong> {{ addressData.latitude }}</p>
                 <p><strong>Longitude:</strong> {{ addressData.longitude }}</p>
                 <p><strong>Last Updated:</strong> {{ addressData.timestamp | date:'medium' }}</p>
             </div>
             
-            <!-- Address Image -->
             <div class="address-image" *ngIf="addressData.imageUrl">
                 <h3>Address Image</h3>
                 <ion-img [src]="addressData.imageUrl" style="width: 100%; height: auto;"></ion-img>
@@ -38,7 +30,7 @@
         </ion-card-content>
     </ion-card>
     
-    <!-- No Address Data Message -->
+
     <div *ngIf="!(addressData$ | async)" class="ion-padding">
         <p>You haven't set up your address yet.</p>
     </div>
