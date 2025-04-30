@@ -1,25 +1,20 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './containers/home/home.component';
 import { LoginComponent } from './containers/login/login.component';
-import { MainViewComponent } from './containers/profile/main-view/main-view.component';
 import { PersonalDataComponent } from './containers/login/personal-data/personal-data.component';
-import { UserDashboardComponent } from './containers/dashboard/user-dashboard/user-dashboard.component';
 import { authGuard } from './guards/auth.guard';
+import { ProfileComponent } from './containers/profile/profile.component';
 export const routes: Routes = [
-    {
-        path: 'dashboard',
-        component: UserDashboardComponent,
-        canActivate: [authGuard]
-        // canActivate: [authGuard, adminGuard]
-    },
     {
         path: 'personal-data',
         component: PersonalDataComponent,
         canActivate: [authGuard]
+        // canActivate: [authGuard, adminGuard]
     },
     {
         path: 'profile',
-        component: MainViewComponent
+        component: ProfileComponent,
+        canActivate: [authGuard]
     },
     {
         path: 'login',
@@ -28,10 +23,6 @@ export const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent
-    },
-    {
-        path: 'login',
-        component: LoginComponent
     },
     {
         path: '',

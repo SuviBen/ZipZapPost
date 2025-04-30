@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     if (this.user$) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/profile']);
     }
     setTimeout(() => this.initRecaptcha(), 1000); // wait until DOM is loaded
   }

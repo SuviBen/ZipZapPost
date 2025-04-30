@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonContent, IonHeader, IonList, IonItem, IonLabel, IonToolbar, IonTitle, IonButton, IonIcon, IonModal, IonRouterOutlet, IonImg, IonNav, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle, IonSpinner } from '@ionic/angular/standalone';
-import { UserProfileService, UserProfile } from '../../../services/login/user-profile.service';
+import { UserProfileService, UserProfile } from '../../services/login/user-profile.service';
 import { firstValueFrom, map, Observable, of } from 'rxjs';
 import { Auth } from '@angular/fire/auth';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AddressService, AddressData } from '../../../services/address/address.service';
+import { AddressService, AddressData } from '../../services/address/address.service';
 import { Firestore, doc, docData } from '@angular/fire/firestore';
 
-import { PageOneComponent } from '../../modals/address-setup/page-one/page-one.component';
+import { PageOneComponent } from '../modals/address-setup/page-one/page-one.component';
 
 const UIElements = [
   IonContent, IonHeader, IonList, IonItem, IonLabel, IonToolbar, IonTitle, IonButton, 
@@ -17,12 +17,12 @@ const UIElements = [
 ];
 
 @Component({
-  selector: 'app-user-dashboard',
+  selector: 'app-profile',
   imports: [...UIElements, CommonModule],
-  templateUrl: './user-dashboard.component.html',
-  styleUrls: ['./user-dashboard.component.scss'],
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss'],
 })
-export class UserDashboardComponent implements OnInit {
+export class ProfileComponent implements OnInit {
   userProfile$: Observable<UserProfile | null>;
   firstName: Promise<string>;
   lastName: Promise<string>;

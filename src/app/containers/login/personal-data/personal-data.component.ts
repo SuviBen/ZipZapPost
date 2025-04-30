@@ -64,7 +64,7 @@ export class PersonalDataComponent {
     if (this.profileForm.valid) {
       try {
         await this.userProfileService.updateUserProfile(this.profileForm.value);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/profile']);
       } catch (error) {
         console.error('Error updating profile:', error);
       }
