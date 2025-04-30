@@ -7,7 +7,8 @@
     "start:ngrok": "ng serve --host=0.0.0.0 --disable-host-check",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "serve:prod": "ng serve --configuration=production"
   },
   "private": true,
   "dependencies": {
@@ -19,12 +20,14 @@
     "@angular/platform-browser": "^19.2.7",
     "@angular/platform-browser-dynamic": "^19.2.7",
     "@angular/router": "^19.2.7",
+    "@angular/service-worker": "^19.2.7",
     "@capacitor/angular": "^2.0.3",
     "@capacitor/camera": "^7.0.1",
     "@capacitor/core": "latest",
     "@capacitor/geolocation": "^7.1.2",
     "@ionic/angular": "^8.5.5",
     "@ionic/pwa-elements": "^3.3.0",
+    "@khmyznikov/pwa-install": "^0.5.4",
     "@types/leaflet": "^1.9.17",
     "leaflet": "^1.9.4",
     "rxjs": "~7.8.0",

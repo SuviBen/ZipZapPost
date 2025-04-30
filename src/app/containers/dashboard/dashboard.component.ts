@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
   userProfile$: Observable<UserProfile | null>;
   firstName: Promise<string>;
   lastName: Promise<string>;
-  postOnTheWay: boolean = false;
+  postOnTheWay: boolean = true;
 
   constructor(
     private userProfileService: UserProfileService,
