@@ -45,5 +45,5 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZIP_ZAP_POST }}'
-          channelId: live
           projectId: zip-zap-post
+          entryPoint: "."
