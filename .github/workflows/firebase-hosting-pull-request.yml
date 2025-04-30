@@ -1,8 +1,10 @@
-name: Deploy to Firebase Hosting on PR
-on: pull_request
+name: Deploy to Firebase Hosting on merge
+on:
+  push:
+    branches:
+      - main
 jobs:
-  build_and_preview:
-    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+  build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -10,24 +12,38 @@ jobs:
         with:
           node-version: '20'
       
-      # Create environment files
       - name: Create environment files
         run: |
-          echo "export const environment = {
+          echo 'export const environment = {
             production: false,
-            firebase: ${{ secrets.FIREBASE_CONFIG }}
-          };" > src/environments/environment.ts
+            firebase: {
+              apiKey: "${{ secrets.FIREBASE_API_KEY }}",
+              authDomain: "zip-zap-post.firebaseapp.com",
+              projectId: "zip-zap-post",
+              storageBucket: "zip-zap-post.firebasestorage.app",
+              messagingSenderId: "272404494518",
+              appId: "1:272404494518:web:559921f865c30483838e17"
+            }
+          };' > src/environments/environment.ts
           
-          echo "export const environment = {
+          echo 'export const environment = {
             production: true,
-            firebase: ${{ secrets.FIREBASE_CONFIG }}
-          };" > src/environments/environment.prod.ts
+            firebase: {
+              apiKey: "${{ secrets.FIREBASE_API_KEY }}",
+              authDomain: "zip-zap-post.firebaseapp.com",
+              projectId: "zip-zap-post",
+              storageBucket: "zip-zap-post.firebasestorage.app",
+              messagingSenderId: "272404494518",
+              appId: "1:272404494518:web:559921f865c30483838e17"
+            }
+          };' > src/environments/environment.prod.ts
       
       - run: npm ci
-      - run: npm run build:prod
+      - run: npm run build
       
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZIP_ZAP_POST }}'
+          channelId: live
           projectId: zip-zap-post

@@ -12,21 +12,34 @@ jobs:
         with:
           node-version: '20'
       
-      # Create environment files
       - name: Create environment files
         run: |
-          echo "export const environment = {
+          echo 'export const environment = {
             production: false,
-            firebase: ${{ secrets.FIREBASE_CONFIG }}
-          };" > src/environments/environment.ts
+            firebase: {
+              apiKey: "${{ secrets.FIREBASE_API_KEY }}",
+              authDomain: "zip-zap-post.firebaseapp.com",
+              projectId: "zip-zap-post",
+              storageBucket: "zip-zap-post.firebasestorage.app",
+              messagingSenderId: "272404494518",
+              appId: "1:272404494518:web:559921f865c30483838e17"
+            }
+          };' > src/environments/environment.ts
           
-          echo "export const environment = {
+          echo 'export const environment = {
             production: true,
-            firebase: ${{ secrets.FIREBASE_CONFIG }}
-          };" > src/environments/environment.prod.ts
+            firebase: {
+              apiKey: "${{ secrets.FIREBASE_API_KEY }}",
+              authDomain: "zip-zap-post.firebaseapp.com",
+              projectId: "zip-zap-post",
+              storageBucket: "zip-zap-post.firebasestorage.app",
+              messagingSenderId: "272404494518",
+              appId: "1:272404494518:web:559921f865c30483838e17"
+            }
+          };' > src/environments/environment.prod.ts
       
       - run: npm ci
-      - run: npm run build:prod
+      - run: npm run build
       
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
