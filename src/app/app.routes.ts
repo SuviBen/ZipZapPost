@@ -4,7 +4,13 @@ import { LoginComponent } from './containers/login/login.component';
 import { PersonalDataComponent } from './containers/login/personal-data/personal-data.component';
 import { authGuard } from './guards/auth.guard';
 import { ProfileComponent } from './containers/profile/profile.component';
+import { DashboardComponent } from './containers/dashboard/dashboard.component';
 export const routes: Routes = [
+    {
+        path:'dashboard',
+        component: DashboardComponent,
+        canActivate: [authGuard]
+    },
     {
         path: 'personal-data',
         component: PersonalDataComponent,
