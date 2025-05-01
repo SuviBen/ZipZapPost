@@ -13,25 +13,29 @@ import { PageOneComponent } from '../modals/address-setup/page-one/page-one.comp
 const UIElements = [
   IonContent, IonHeader, IonList, IonItem, IonLabel, IonToolbar, IonTitle, IonButton, 
   IonButtons, IonIcon, IonModal, IonRouterOutlet, IonImg, IonNav, IonCard, IonCardContent, 
-  IonCardHeader, IonCardTitle, IonCardSubtitle, IonSpinner, IonMenuButton
+  IonCardHeader, IonCardTitle, IonCardSubtitle, IonMenuButton
 ];
 
 @Component({
   selector: 'app-profile',
-  imports: [...UIElements, CommonModule],
+  imports: [...UIElements, CommonModule, PageOneComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
+  @ViewChild('nav') private nav!: IonNav;
+  
+  onWillPresent() {
+    this.nav.setRoot(PageOneComponent);
+  }
   userProfile$: Observable<UserProfile | null>;
   firstName: Promise<string>;
   lastName: Promise<string>;
+  phoneNumber: Promise<string>;
   addressData$: Observable<AddressData | null> = of(null);
   isLoading = true;
   mapReady = false;
 
-  @ViewChild('nav') private nav!: IonNav;
-  @ViewChild('modal') private modal!: IonModal;
 
   constructor(
     private readonly _auth: Auth,
@@ -43,7 +47,7 @@ export class ProfileComponent implements OnInit {
     this.userProfile$ = this.userProfileService.getUserProfile();
     this.firstName = firstValueFrom(this.userProfile$.pipe(map(userProfile => userProfile?.firstName || '')));
     this.lastName = firstValueFrom(this.userProfile$.pipe(map(userProfile => userProfile?.lastName || '')));
-    
+    this.phoneNumber = firstValueFrom(this.userProfile$.pipe(map(userProfile => userProfile?.phoneNumber || '')));
     // Get the current user's address data
     const user = this._auth.currentUser;
     if (user) {
@@ -109,4 +113,5 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+
 }

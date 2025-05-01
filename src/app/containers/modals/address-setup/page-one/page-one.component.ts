@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { IonButton, IonContent, IonNav, IonLabel, IonToast } from '@ionic/angular/standalone';
+import { IonButton, IonContent, IonNav, IonLabel, IonToast, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Geolocation } from '@capacitor/geolocation';
 import { AddressService } from '../../../../services/address/address.service';
@@ -10,10 +10,11 @@ import { PageTwoComponent } from '../page-two/page-two.component';
   selector: 'app-page-one',
   templateUrl: './page-one.component.html',
   styleUrls: ['./page-one.component.scss'],
-  imports: [IonButton, IonContent, IonLabel, CommonModule, IonToast],
+  imports: [IonButton, IonContent, IonLabel, CommonModule, IonToast, IonNav, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons],
   standalone: true
 })
 export class PageOneComponent {
+  constructor(private nav: IonNav) {}
   position?: {
     latitude: number;
     longitude: number;
@@ -28,7 +29,7 @@ export class PageOneComponent {
   showToast = false;
   toastMessage = '';
   
-  private nav = inject(IonNav);
+
   private addressService = inject(AddressService);
 
   navigateToPageTwo() {
