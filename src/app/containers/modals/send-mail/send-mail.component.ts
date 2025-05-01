@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonModal, IonTitle, IonToolbar, IonLoading, IonToast } from '@ionic/angular/standalone';
+import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonModal, IonTitle, IonToolbar, } from '@ionic/angular/standalone';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { AddressService, UserData } from '../../../services/address/address.service';
 import { OrderService } from '../../../services/order.service';
@@ -17,8 +17,6 @@ const UIElements = [
   IonTitle,
   IonToolbar,
   IonLabel,
-  IonLoading,
-  IonToast,
 ];
 
 @Component({
@@ -73,14 +71,12 @@ export class SendMailComponent {
     if (!this.recipient) {
       return;
     }
-    // Show loading indicator
     const loading = await this.loadingController.create({
       message: 'Creating order...',
       spinner: 'circles'
     });
     await loading.present();
 
-    // Create the order
     const orderId = await this.orderService.createOrder(this.recipient.uid);
     
     await loading.dismiss();

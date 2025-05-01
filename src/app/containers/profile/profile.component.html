@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>My profile</ion-title>
-    <ion-button class="logout-button" (click)="signOut()" slot="end">Logout</ion-button>
+    <ion-button class="logout-button" (click)="signOut()" size="medium" slot="end">Logout</ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -21,7 +21,6 @@
             <div class="address-details">
                 <p><strong>Latitude:</strong> {{ addressData.latitude }}</p>
                 <p><strong>Longitude:</strong> {{ addressData.longitude }}</p>
-                <p><strong>Last Updated:</strong> {{ addressData.timestamp | date:'medium' }}</p>
             </div>
             
             <div class="address-image" *ngIf="addressData.imageUrl">

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonContent, IonButton, IonIcon, IonHeader, IonInput, IonItem, IonList, IonTitle, IonLabel, IonToolbar, IonMenuButton, IonButtons, IonModal, IonNav, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
+import { IonContent, IonButton, IonHeader, IonItem, IonList, IonTitle, IonLabel, IonToolbar, IonMenuButton, IonButtons, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { UserProfile, UserProfileService } from '../../services/login/user-profile.service';
 import { AuthenticationService } from '../../services/login/authentication.service';
@@ -10,7 +10,7 @@ import { OrderService } from '../../services/order.service';
 
 
 const UIElements = [
-  IonContent, IonButton, IonIcon, IonHeader, IonInput, IonItem, IonList, IonTitle, IonLabel, IonToolbar, IonMenuButton, IonButtons,
+  IonContent, IonButton, IonHeader, IonItem, IonList, IonTitle, IonLabel, IonToolbar, IonMenuButton, IonButtons,
   IonRefresher, IonRefresherContent
 ];  
 

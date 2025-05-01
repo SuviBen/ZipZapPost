@@ -38,7 +38,6 @@ export class AddressService {
     const uid = user.uid;
     const addressDocRef = doc(this.firestore, 'address-data', uid);
     
-    // Check if document exists
     const docSnapshot = await getDoc(addressDocRef);
     
     const addressData: AddressData = {
@@ -48,8 +47,8 @@ export class AddressService {
       timestamp: new Date()
     };
     
-    // Use setDoc with merge option to create or update
-    await setDoc(addressDocRef, addressData, { merge: true });
+    
+    await setDoc(addressDocRef, addressData, { merge: true }); // Use setDoc with merge option to create or update
   }
 
   async uploadImage(imageUri: string): Promise<string> {
@@ -60,23 +59,17 @@ export class AddressService {
 
     const uid = user.uid;
     
-    // Convert the image URI to a blob
     const response = await fetch(imageUri);
     const blob = await response.blob();
     
-    // Create the storage path
     const storagePath = `address-images/${uid}/${Date.now()}.jpg`;
     
-    // Create a reference to the storage location
     const storageRef = ref(this.storage, storagePath);
     
-    // Upload the image
     const snapshot = await uploadBytes(storageRef, blob);
     
-    // Get the download URL
     const downloadUrl = await getDownloadURL(snapshot.ref);
     
-    // Update the address-data document with the image URL and storage path
     const addressDocRef = doc(this.firestore, 'address-data', uid);
     await updateDoc(addressDocRef, {
       imageUrl: downloadUrl,
@@ -100,11 +93,9 @@ export class AddressService {
         const addressData = addressDoc.data() as AddressData;
         
         if (addressData.storagePath) {
-          // Use the stored path directly
           const storageRef = ref(this.storage, addressData.storagePath);
           await deleteObject(storageRef);
         } else {
-          // If we don't have the path, we can't delete the file
           console.warn('No storage path found for image, unable to delete from storage');
         }
       }
@@ -116,7 +107,6 @@ export class AddressService {
 
   async findUserByPhoneNumber(phoneNumber: string): Promise<UserData | null> {
     try {
-      // Query users collection where phoneNumber matches
       const usersRef = collection(this.firestore, 'users');
       const q = query(usersRef, where('phoneNumber', '==', phoneNumber));
       const querySnapshot = await getDocs(q);
@@ -129,7 +119,6 @@ export class AddressService {
         };
       }
       
-      // If no user found with that phone number
       return null;
     } catch (error) {
       console.error('Error finding user by phone number:', error);

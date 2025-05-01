@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { IonContent, IonButton, IonTitle, IonHeader } from '@ionic/angular/standalone';
+import { IonContent, IonButton, IonTitle, IonHeader, IonIcon } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 
 const UIElements = [
-  IonContent, IonButton,IonHeader, IonTitle
+  IonContent, IonButton, IonIcon
 ];
 @Component({
   selector: 'app-home',

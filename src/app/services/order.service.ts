@@ -52,19 +52,17 @@ export class OrderService {
         return false;
       }
       
-      // Query for orders where the current user is the recipient and delivered is false
-      const ordersRef = collection(this.firestore, 'orders');
+
+      const ordersRef = collection(this.firestore, 'orders');     // Query for orders 
       const q = query(
         ordersRef, 
         where('recipient', '==', user.uid),
         where('delivered', '==', false)
       );
       
-      // Execute the query
       const querySnapshot = await getDocs(q);
       
-      // Return true if there are any matching documents
-      return !querySnapshot.empty;
+      return !querySnapshot.empty; // this will true if matching documents
     } catch (error) {
       console.error('Error checking for pending orders:', error);
       return false;

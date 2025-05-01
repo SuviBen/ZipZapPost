@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { IonButton, IonContent, IonNav, IonLabel, IonToast, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons } from '@ionic/angular/standalone';
+import { IonButton, IonContent, IonNav, IonLabel, IonToast, } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Geolocation } from '@capacitor/geolocation';
 import { AddressService } from '../../../../services/address/address.service';
@@ -10,7 +10,7 @@ import { PageTwoComponent } from '../page-two/page-two.component';
   selector: 'app-page-one',
   templateUrl: './page-one.component.html',
   styleUrls: ['./page-one.component.scss'],
-  imports: [IonButton, IonContent, IonLabel, CommonModule, IonToast, IonNav, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons],
+  imports: [IonButton, IonContent, IonLabel, CommonModule, IonToast, ],
   standalone: true
 })
 export class PageOneComponent {
@@ -42,7 +42,6 @@ export class PageOneComponent {
       const coordinates = await Geolocation.getCurrentPosition();
       this.position = coordinates.coords;
       
-      // Save to Firebase
       await this.addressService.saveAddressData(
         this.position.latitude,
         this.position.longitude

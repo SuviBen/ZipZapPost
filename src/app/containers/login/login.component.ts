@@ -2,14 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { User } from '@angular/fire/auth';
-import { IonInput, IonItem, IonList, IonContent, IonTitle, IonHeader, IonButton, IonIcon, AlertController } from '@ionic/angular/standalone';
+import { IonInput, IonItem, IonList, IonContent, IonTitle, IonHeader, IonButton, IonIcon, AlertController, IonLabel, IonToolbar } from '@ionic/angular/standalone';
 import { Observable } from 'rxjs';
 import { RecaptchaVerifier } from '@angular/fire/auth';
 import { AuthenticationService } from '../../services/login/authentication.service';
 import { Router } from '@angular/router';
 
 const UIElements = [
-  IonContent, IonInput, IonItem, IonList, IonTitle, IonHeader, IonButton, IonIcon
+  IonContent, IonInput, IonItem, IonList, IonTitle, IonHeader, IonButton, IonIcon, IonLabel, IonToolbar
 ];
 
 @Component({
@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
     if (this.user$) {
       this.router.navigate(['/profile']);
     }
-    setTimeout(() => this.initRecaptcha(), 1000); // wait until DOM is loaded
+    setTimeout(() => this.initRecaptcha(), 1000); // wait for DOM to load
   }
 
   private initRecaptcha() {
@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
         }
       }
 
-      // add formatting logic
+      // todo: add formatting logic
       const formattedPhoneNumber = this.phoneNumber.startsWith('+') ? 
         this.phoneNumber : `+${this.phoneNumber}`;
 
@@ -112,6 +112,7 @@ export class LoginComponent implements OnInit {
         this.verificationCode
       );
       this.showVerificationInput = false;
+      this.router.navigate(['/profile']);
     } catch (error) {
       console.error('Failed to verify code:', error);
       this.presentAlert('Failed to verify code. Please try again.');

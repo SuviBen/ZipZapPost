@@ -1,6 +1,78 @@
 <ion-content class="ion-padding">
-    <ion-header>
-        <ion-title>Home</ion-title>
-    </ion-header>
-    <ion-button routerLink="/login">Login</ion-button>
+  <div class="hero-section">
+    <img src="icons/icon-512x512.png" alt="ZipZap Post Logo" class="logo" onerror="this.src='assets/icon/favicon.png'">
+    <h1>ZipZap Post</h1>
+    <p class="tagline">Bringing postal services to every corner of Vanuatu</p>
+  </div>
+
+  <div class="problem-section">
+    <h2>The Problem</h2>
+    <div class="problem-cards">
+      <div class="problem-card">
+        <ion-icon name="home-outline"></ion-icon>
+        <p>Addresses only exist in the capital city</p>
+      </div>
+      <div class="problem-card">
+        <ion-icon name="mail-outline"></ion-icon>
+        <p>No mail delivery service in rural areas</p>
+      </div>
+      <div class="problem-card">
+        <ion-icon name="location-outline"></ion-icon>
+        <p>People outside the city must use PO boxes in the capital</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="solution-section">
+    <h2>Our Solution</h2>
+    <p>ZipZap Post creates a mobile-based addressing system leveraging smartphone GPS technology for precise location marking.</p>
+    
+    <div class="features-list">
+      <div class="feature">
+        <ion-icon name="locate-outline"></ion-icon>
+        <h3>GPS Address Creation</h3>
+        <p>Your location becomes your address</p>
+      </div>
+      <div class="feature">
+        <ion-icon name="shield-outline"></ion-icon>
+        <h3>Privacy Protection</h3>
+        <p>Phone-number based or coded addressing</p>
+      </div>
+      <div class="feature">
+        <ion-icon name="map-outline"></ion-icon>
+        <h3>Optimized Delivery</h3>
+        <p>Efficient routes for postal workers</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <p>Register using your smartphone</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <p>App acquires GPS location at your home</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <p>Your phone number becomes your "address"</p>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <p>Senders use this GPS-based address for deliveries</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <h2>Ready to get your first digital address?</h2>
+    <ion-button size="large" expand="block" routerLink="/login" class="get-started-btn">
+      Get Started
+      <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
 </ion-content>

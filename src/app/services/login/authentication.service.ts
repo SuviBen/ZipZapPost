@@ -30,67 +30,42 @@ export class AuthenticationService {
   }
   
   async connectWithPhoneNumber(phoneNumber: string, recaptchaVerifier: RecaptchaVerifier) {
-    try {
-      return signInWithPhoneNumber(this._auth, phoneNumber, recaptchaVerifier);
-    } catch (error) {
-      console.error('Error requesting OTP:', error);
-      throw error;
-    }
+    return signInWithPhoneNumber(this._auth, phoneNumber, recaptchaVerifier);
   }
 
   async verifyPhoneNumber(confirmationResult: any, verificationCode: string) {
-    try {
-      const result = await confirmationResult.confirm(verificationCode);
-      this.currentUser = result.user;
-      if (result.user) {
-        const uid = result.user.uid;
-        const userDoc = doc(this._firestore, 'users', uid);
-        
-        // Check if the user document exists
-        const userSnapshot = await getDoc(userDoc);
-        
-        if (!userSnapshot.exists()) {
-          // User doesn't exist, create new document
-          await setDoc(userDoc, {
-            uid,
-            lastLogin: serverTimestamp(),
-            phoneNumber: result.user.phoneNumber,
-            profileOK: false
-          });
-          console.log('went through first if');
-          // Redirect to personal data page for new users
-          this.router.navigate(['/personal-data']);
-        } else {
-          // User exists, update last login
-          await updateDoc(userDoc, {
-            lastLogin: serverTimestamp()
-          });
-          
-          // Check profileOK flag and redirect accordingly
-          const userData = userSnapshot.data();
-          try {
-            if (!userData) {
-              throw new Error('User data is empty');
-            }
-            
-            if (userData['profileOK'] === false) {
-              this.router.navigate(['/personal-data']);
-            } else {
-              this.router.navigate(['/home']);
-            }
-          } catch (err) {
-            console.error('Error checking profileOK status:', err);
-            // Default to personal-data if there's any issue
-            this.router.navigate(['/personal-data']);
-          }
-        }
-      }
+    const result = await confirmationResult.confirm(verificationCode);
+    this.currentUser = result.user;
+
+    if (!result.user) return null;
+    
+    const uid = result.user.uid;
+    const userDoc = doc(this._firestore, 'users', uid);
+    const userSnapshot = await getDoc(userDoc);
+    
+    if (!userSnapshot.exists()) {
+      await setDoc(userDoc, {
+        uid,
+        lastLogin: serverTimestamp(),
+        phoneNumber: result.user.phoneNumber,
+        profileOK: false
+      });
+
+      this.router.navigate(['/personal-data']);
+    } else {
+      await updateDoc(userDoc, {
+        lastLogin: serverTimestamp()
+      });
       
-      return result.user;
-    } catch (error) {
-      console.error('Error confirming OTP:', error);
-      throw error;
+      const userData = userSnapshot.data();
+      if (!userData || userData['profileOK'] === false) {   // Navigate based on profile status
+        this.router.navigate(['/personal-data']);
+      } else {
+        this.router.navigate(['/dashboard']);
+      }
     }
+    
+    return result.user;
   }
 
   async signOut() {

@@ -1,5 +1,7 @@
 <ion-header>
-  <ion-title>Login</ion-title>
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
     <ion-list class="ion-padding-horizontal">
@@ -44,7 +46,17 @@
               Verify Code
             </ion-button>
           </ion-item>
-        }        
+        }  
+              
+        <ion-item>
+          <ion-label color="warning">
+            If you wish not to use your phone number, you can use the following test account:
+            <br>
+            Phone Number: +41123456789
+            <br>
+            Verification Code: 123456
+          </ion-label>
+        </ion-item>
     </ion-list>
     
     <div id="recaptcha-container"></div>
