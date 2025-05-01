@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonContent, IonButton, IonIcon, IonHeader, IonInput, IonItem, IonList, IonTitle, IonLabel, IonToolbar, IonMenuButton, IonButtons } from '@ionic/angular/standalone';
+import { IonContent, IonButton, IonIcon, IonHeader, IonInput, IonItem, IonList, IonTitle, IonLabel, IonToolbar, IonMenuButton, IonButtons, IonModal, IonNav } from '@ionic/angular/standalone';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { UserProfile, UserProfileService } from '../../services/login/user-profile.service';
 import { AuthenticationService } from '../../services/login/authentication.service';
 import { RouterModule } from '@angular/router';
+import { SendMailComponent } from '../modals/send-mail/send-mail.component';
+
 
 const UIElements = [
-  IonContent, IonButton, IonIcon, IonHeader, IonInput, IonItem, IonList, IonTitle, IonLabel, IonToolbar, IonMenuButton, IonButtons
+  IonContent, IonButton, IonIcon, IonHeader, IonInput, IonItem, IonList, IonTitle, IonLabel, IonToolbar, IonMenuButton, IonButtons,
 ];  
 
 @Component({
@@ -15,14 +17,14 @@ const UIElements = [
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
-  imports: [CommonModule, ...UIElements, RouterModule],
+  imports: [CommonModule, ...UIElements, RouterModule, SendMailComponent],
 })
 export class DashboardComponent implements OnInit {
 
   userProfile$: Observable<UserProfile | null>;
   firstName: Promise<string>;
   lastName: Promise<string>;
-  postOnTheWay: boolean = true;
+  mailOnTheWay: boolean = true;
 
   constructor(
     private userProfileService: UserProfileService,

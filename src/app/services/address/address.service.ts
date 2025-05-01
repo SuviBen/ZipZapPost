@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, doc, setDoc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs } from '@angular/fire/firestore';
 import { Storage, ref, uploadBytes, getDownloadURL, deleteObject, getStorage } from '@angular/fire/storage';
 import { AuthenticationService } from '../login/authentication.service';
 
@@ -10,6 +10,12 @@ export interface AddressData {
   timestamp: Date;
   imageUrl?: string;
   storagePath?: string;
+  phoneNumber?: string;
+}
+
+export interface UserData {
+  uid: string;
+  phoneNumber: string;
 }
 
 @Injectable({
@@ -105,6 +111,29 @@ export class AddressService {
     } catch (error) {
       console.error('Error deleting image:', error);
       throw error;
+    }
+  }
+
+  async findUserByPhoneNumber(phoneNumber: string): Promise<UserData | null> {
+    try {
+      // Query users collection where phoneNumber matches
+      const usersRef = collection(this.firestore, 'users');
+      const q = query(usersRef, where('phoneNumber', '==', phoneNumber));
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        return {
+          uid: userDoc.id,
+          phoneNumber: userDoc.data()['phoneNumber']
+        };
+      }
+      
+      // If no user found with that phone number
+      return null;
+    } catch (error) {
+      console.error('Error finding user by phone number:', error);
+      return null;
     }
   }
 } 
