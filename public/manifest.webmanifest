@@ -1,12 +1,12 @@
 {
   "name": "Zip Zap Post",
   "short_name": "Zip Zap Post",
-  "theme_color": "#FFBE00",
+  "theme_color": "#ffbe00",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
-  "description": "Zip Zap Post is a mobile app that puts you on the map and even if you don't have a legal address, you can still receive mail.",
+  "description": "Zip Zap Post is a mobile app that puts you on the map. Even if you don't have a physical address, you can still receive mail.",
   "icons": [
     {
       "src": "icons/icon-72x72.png",

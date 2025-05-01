@@ -35,7 +35,7 @@
         "https://*.firebase.com"        
       ],
       "cacheConfig": {
-        "maxAge": "1d",
+        "maxAge": "1s",
         "maxSize": 5,
         "strategy": "freshness"
       }

@@ -14,6 +14,10 @@ jobs:
       
       - name: Create environment files
         run: |
+          # Debug to verify API key is set
+          echo "API key length: ${#FIREBASE_API_KEY}"
+          
+          # Create environment files with proper API key
           echo 'export const environment = {
             production: false,
             firebase: {
@@ -37,6 +41,10 @@ jobs:
               appId: "1:272404494518:web:559921f865c30483838e17"
             }
           };' > src/environments/environment.prod.ts
+          
+          # Debug the generated files (masked for security)
+          echo "environment.ts contains apiKey with length: $(grep -o 'apiKey:.*",' src/environments/environment.ts | wc -c)"
+          echo "environment.prod.ts contains apiKey with length: $(grep -o 'apiKey:.*",' src/environments/environment.prod.ts | wc -c)"
       
       - run: npm ci
       - run: npm run build
