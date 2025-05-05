@@ -1,3 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>ZipZap Post</ion-title>
+    <ion-buttons slot="end" >
+      <ion-button fill="solid" routerLink="/login">
+        Login
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="ion-padding">
   <div class="hero-section">
     <img src="icons/icon-512x512.png" alt="ZipZap Post Logo" class="logo" onerror="this.src='assets/icon/favicon.png'">
@@ -70,7 +81,7 @@
 
   <div class="cta-section">
     <h2>Ready to get your first digital address?</h2>
-    <ion-button size="large" expand="block" routerLink="/login" class="get-started-btn">
+    <ion-button color="primary" size="large" expand="block" routerLink="/login" class="get-started-btn">
       Get Started
       <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
     </ion-button>

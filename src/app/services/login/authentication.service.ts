@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Auth, authState, GoogleAuthProvider, signInWithPopup, signOut, User, RecaptchaVerifier, signInWithPhoneNumber } from '@angular/fire/auth';
-import { doc, serverTimestamp, getFirestore, updateDoc, getDoc, collection, query, Firestore, collectionData } from '@angular/fire/firestore';
+import { Auth, authState, signOut, User, RecaptchaVerifier, signInWithPhoneNumber } from '@angular/fire/auth';
+import { doc, serverTimestamp, updateDoc, getDoc, collection, query, Firestore, collectionData } from '@angular/fire/firestore';
 import { setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -57,12 +57,7 @@ export class AuthenticationService {
         lastLogin: serverTimestamp()
       });
       
-      const userData = userSnapshot.data();
-      if (!userData || userData['profileOK'] === false) {   // Navigate based on profile status
-        this.router.navigate(['/personal-data']);
-      } else {
-        this.router.navigate(['/dashboard']);
-      }
+      await this.checkUserDataOK();
     }
     
     return result.user;
@@ -72,5 +67,20 @@ export class AuthenticationService {
     await signOut(this._auth);
     this.currentUser = null;
     this.router.navigate(['/home']);
+  }
+
+  async checkUserDataOK() {
+    const uid = this.currentUser?.uid;
+    if (!uid) {
+      return;
+    }
+    const userDoc = doc(this._firestore, 'users', uid);
+    const userSnapshot = await getDoc(userDoc);
+    const userData = userSnapshot.data();
+    if (!userData || userData['profileOK'] === false) {   // Navigate based on profile status
+      this.router.navigate(['/personal-data']);
+    } else {
+      this.router.navigate(['/profile']);
+    }
   }
 }

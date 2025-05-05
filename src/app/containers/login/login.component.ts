@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     if (this.user$) {
-      this.router.navigate(['/profile']);
+      this.authService.checkUserDataOK()
     }
     setTimeout(() => this.initRecaptcha(), 1000); // wait for DOM to load
   }
@@ -112,10 +112,10 @@ export class LoginComponent implements OnInit {
         this.verificationCode
       );
       this.showVerificationInput = false;
-      this.router.navigate(['/profile']);
     } catch (error) {
       console.error('Failed to verify code:', error);
       this.presentAlert('Failed to verify code. Please try again.');
+      this.verificationCode = '';
     }
   }
 
