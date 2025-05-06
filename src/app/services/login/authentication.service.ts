@@ -83,4 +83,21 @@ export class AuthenticationService {
       this.router.navigate(['/profile']);
     }
   }
+
+  async isAuthenticated(): Promise<boolean> {
+    if (this.currentUser === null) {
+      return false;
+    }
+    
+    try {
+      const uid = this.currentUser.uid;
+      const userDoc = doc(this._firestore, 'users', uid);
+      const userSnapshot = await getDoc(userDoc);
+      
+      return userSnapshot.exists();
+    } catch (error) {
+      console.error('Error checking user authentication:', error);
+      return false;
+    }
+  }
 }

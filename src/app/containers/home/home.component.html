@@ -1,11 +1,23 @@
 <ion-header>
   <ion-toolbar>
+    @if(isLoggedIn$ | async) {
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-buttons slot="end" >
+        <ion-button color="primary" fill="solid" routerLink="/login">
+          My profile
+        </ion-button>
+      </ion-buttons>
+
+    } @else {
+      <ion-buttons slot="end" >
+        <ion-button color="primary" fill="solid" routerLink="/login">
+          Login
+        </ion-button>
+      </ion-buttons>
+    }
     <ion-title>ZipZap Post</ion-title>
-    <ion-buttons slot="end" >
-      <ion-button fill="solid" routerLink="/login">
-        Login
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
