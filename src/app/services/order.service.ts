@@ -3,6 +3,7 @@ import { Firestore, collection, addDoc, query, where, getDocs } from '@angular/f
 import { AuthenticationService } from './login/authentication.service';
 
 export interface Order {
+  id?: string;
   delivered: boolean;
   recipient: string;
   sender: string;

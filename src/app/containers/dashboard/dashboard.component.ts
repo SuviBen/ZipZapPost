@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonContent, IonButton, IonHeader, IonItem, IonList, IonTitle, IonLabel, IonToolbar, IonMenuButton, IonButtons, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { firstValueFrom, map, Observable } from 'rxjs';
@@ -7,6 +7,7 @@ import { AuthenticationService } from '../../services/login/authentication.servi
 import { RouterModule } from '@angular/router';
 import { SendMailComponent } from '../modals/send-mail/send-mail.component';
 import { OrderService } from '../../services/order.service';
+import { IncomingOrdersComponent } from '../modals/incoming-orders/incoming-orders.component';
 
 
 const UIElements = [
@@ -19,9 +20,11 @@ const UIElements = [
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
-  imports: [CommonModule, ...UIElements, RouterModule, SendMailComponent],
+  imports: [CommonModule, ...UIElements, RouterModule, SendMailComponent, IncomingOrdersComponent],
 })
 export class DashboardComponent implements OnInit {
+  @ViewChild(IncomingOrdersComponent) incomingOrdersModal!: IncomingOrdersComponent;
+  @ViewChild(SendMailComponent) sendMailModal!: SendMailComponent;
 
   userProfile$: Observable<UserProfile | null>;
   firstName: Promise<string>;
@@ -60,5 +63,21 @@ export class DashboardComponent implements OnInit {
 
   async signOut() {
     await this.authService.signOut();
+  }
+
+  openIncomingOrdersModal() {
+    if (this.incomingOrdersModal && this.incomingOrdersModal.modal) {
+      this.incomingOrdersModal.modal.present();
+    } else {
+      console.error('Incoming orders modal not found');
+    }
+  }
+
+  openSendMailModal() {
+    if (this.sendMailModal && this.sendMailModal.modal) {
+      this.sendMailModal.modal.present();
+    } else {
+      console.error('Send mail modal not found');
+    }
   }
 }

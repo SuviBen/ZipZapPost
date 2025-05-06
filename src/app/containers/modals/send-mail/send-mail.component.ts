@@ -38,11 +38,15 @@ export class SendMailComponent {
     private toastController: ToastController
   ) {}
 
-  cancel() {
-    this.modal.dismiss(null, 'cancel');
+  resetForm() {
     this.phoneNumber = '+41';
     this.recipient = null;
     this.invalidPhoneNumber = false;
+  }
+
+  cancel() {
+    this.modal.dismiss(null, 'cancel');
+    this.resetForm();
   }
 
   confirm() {
@@ -91,8 +95,6 @@ export class SendMailComponent {
     await toast.present();
     
     this.modal.dismiss(orderId, 'confirm');
-    this.phoneNumber = '+41';
-    this.recipient = null;
-    this.invalidPhoneNumber = false;
+    this.resetForm();
   }
-  }
+}

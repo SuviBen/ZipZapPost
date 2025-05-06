@@ -1,4 +1,4 @@
-  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+  <ion-modal (willDismiss)="onWillDismiss($event)" (willPresent)="resetForm()">
     <ng-template>
       <ion-header>
         <ion-toolbar>
