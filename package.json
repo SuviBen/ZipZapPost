@@ -7,7 +7,7 @@
     "start:ngrok": "ng serve --host=0.0.0.0 --disable-host-check",
     "build": "ng build",
     "build:prod": "node replace-env.js && ng build --configuration=production",
-    "deploy": "node replace-env.js && ng deploy --base-href=/ZipZapPost/ --configuration=production",
+    "deploy": "node replace-env.js && ng deploy --configuration=production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:prod": "ng serve --configuration=production"

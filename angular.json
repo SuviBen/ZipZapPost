@@ -158,7 +158,15 @@
           }
         },
         "deploy": {
-          "builder": "angular-cli-ghpages:deploy"
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "baseHref": "/ZipZapPost/"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "zip-zap-post:build:production"
+            }
+          }
         }
       }
     }
